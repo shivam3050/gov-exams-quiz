@@ -1,0 +1,516 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gov Exams Quiz</title>
+<style>
+/* Reset & body */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+/* Container */
+.container {
+  width: 95%;
+  max-width: 450px;
+  background: #1e1e1e;
+  border-radius: 15px;
+  padding: 20px 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+/* Mode Buttons */
+.mode-select { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 15px;column-gap: 10px; }
+.mode-select button {
+  flex: 1 1 48%;
+  margin: 5px 0;
+  padding: 12px 5px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  background: #2979ff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mode-select button:hover { background: #1565c0; }
+
+/* Question */
+#question {
+  font-size: 18px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+/* Options */
+#options { display: flex; flex-direction: column; }
+#options button {
+  background: #333;
+  color: #e0e0e0;
+  padding: 14px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+#options button:hover { background: #444; }
+.correct { background-color: #4CAF50 !important; color: #fff; }
+.wrong { background-color: #f44336 !important; color: #fff; }
+
+/* Explanation */
+#explanation {
+  color: #64b5f6;
+  margin: 10px 0 15px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Next button */
+#nextBtn {
+  width: 100%;
+  background: #2979ff;
+  color: #fff;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#nextBtn:hover { background: #1565c0; }
+
+/* Score */
+#score {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 12px;
+  font-size: 16px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  
+  <h2 id="question">Loading...</h2>
+  <div class="mode-select" id="modeDiv">
+    <button onclick="selectMode('serial')">Serial</button>
+    <button onclick="selectMode('random')">Random</button>
+    <button onclick="selectMode('random_no_repeat')">Random No Repeat</button>
+    <button onclick="selectMode('least_corrected')">Least Corrected</button>
+  </div>
+  <div id="options"></div>
+  <div id="explanation"></div>
+  <button id="nextBtn" onclick="nextQuestion()">Next ➡️</button>
+  <div id="score">Score: 0/0</div>
+</div>
+
+<script>
+let questions = [];
+let questionOrder = [];
+let current = 0;
+let total = 0;
+let correct = 0;
+
+// === GitHub raw URL for JSON ===
+let url = "https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/gov_exams_objective_questions.json";
+
+
+
+
+
+function decryptFullJSON(encryptedData) {
+    return encryptedData.map(row => {
+        let shift = "s".charCodeAt(0) - "n".charCodeAt(0);
+        let decryptedRow = {};
+        for (let k in row) {
+            let decKey = "";
+            let decValue = "";
+            // decrypt key
+            for (let c of k) {
+                if (c.match(/[a-z]/i)) {
+                    let code = c.charCodeAt(0);
+                    let base = (code >= 65 && code <= 90) ? 65 : 97;
+                    decKey += String.fromCharCode((code - base - shift + 26) % 26 + base);
+                } else decKey += c;
+            }
+            // decrypt value
+            for (let c of row[k]) {
+                if (c.match(/[a-z]/i)) {
+                    let code = c.charCodeAt(0);
+                    let base = (code >= 65 && code <= 90) ? 65 : 97;
+                    decValue += String.fromCharCode((code - base - shift + 26) % 26 + base);
+                } else decValue += c;
+            }
+            decryptedRow[decKey] = decValue;
+        }
+        return decryptedRow;
+    });
+}
+
+
+
+fetch('https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/gov_exams_objective_questions_cyphered.json')
+  .then(res => res.json())
+  .then(data => {
+      questions = decryptFullJSON(data);
+      document.getElementById('question').textContent = "Select mode to start the quiz...";
+      console.log("Decrypted questions loaded:", questions.length);
+  })
+  .catch(err => {
+      document.getElementById('question').textContent = "Failed to load questions.";
+      console.error(err);
+  });
+
+
+
+// Mode selection
+function selectMode(mode) {
+  if (!questions.length) return;
+
+  // Hide mode buttons for focus
+  document.getElementById('modeDiv').style.display = 'none';
+
+  if (mode === "serial") questionOrder = questions.map((_, i) => i);
+  else if (mode === "random") questionOrder = Array.from({length: questions.length}, () => Math.floor(Math.random() * questions.length));
+  else if (mode === "random_no_repeat") questionOrder = questions.map((_, i) => i).sort(() => Math.random() - 0.5);
+  else if (mode === "least_corrected") questionOrder = questions.map((q, i) => i).sort((a, b) => questions[a].count - questions[b].count);
+
+  current = 0;
+  total = 0;
+  correct = 0;
+  showQuestion();
+  updateScore();
+}
+
+// Show question
+function showQuestion() {
+  const q = questions[questionOrder[current]];
+
+  document.getElementById('question').textContent = `ID-${q.id}:- \n${q.question}`;
+
+
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+
+  for (let i = 1; i <= 4; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = q['option'+i];
+    btn.onclick = () => answer(i, btn);
+    optionsDiv.appendChild(btn);
+  }
+
+  document.getElementById('explanation').textContent = '';
+}
+
+// Handle answer
+function answer(choice, btn) {
+  const q = questions[questionOrder[current]];
+  total++;
+  document.querySelectorAll('#options button').forEach(b => b.disabled = true);
+  const correctIndex = parseInt(q.correct_option);
+
+if (choice === correctIndex) {
+  correct++;
+  btn.classList.add('correct');
+  updateScore();
+  setTimeout(() => nextQuestion(), 500);
+} else {
+  btn.classList.add('wrong');
+  document.querySelectorAll('#options button')[correctIndex-1].classList.add('correct');
+  document.getElementById('explanation').textContent = "📘 Explanation: " + (q.explanation || "No explanation provided.");
+  updateScore();
+}
+
+}
+
+
+
+// Next question
+function nextQuestion() {
+  if (!questionOrder.length) return;
+  current = (current + 1) % questionOrder.length;
+  showQuestion();
+}
+
+// Update score
+function updateScore() {
+  document.getElementById('score').textContent = `Score: ${correct}/${total}`;
+}
+
+
+
+
+
+
+
+</script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gov Exams Quiz</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+.container { width: 95%; max-width: 450px; background: #1e1e1e; border-radius: 15px; padding: 20px 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.mode-select { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 15px; column-gap: 10px; }
+.mode-select button {
+  flex: 1 1 48%;
+  margin: 5px 0;
+  padding: 12px 5px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  background: #2979ff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mode-select button:hover { background: #1565c0; }
+#question { font-size: 18px; margin-bottom: 15px; line-height: 1.5; }
+#options { display: flex; flex-direction: column; }
+#options button {
+  background: #333; color: #e0e0e0; padding: 14px; margin-bottom: 10px;
+  border-radius: 10px; font-size: 16px; text-align: left; cursor: pointer;
+  transition: all 0.2s; border: none;
+}
+#options button:hover { background: #444; }
+.correct { background-color: #4CAF50 !important; color: #fff; }
+.wrong { background-color: #f44336 !important; color: #fff; }
+#explanation { color: #64b5f6; margin: 10px 0 15px 0; font-size: 14px; line-height: 1.4; }
+#nextBtn {
+  width: 100%; background: #2979ff; color: #fff; padding: 14px;
+  font-size: 16px; border-radius: 10px; border: none; cursor: pointer;
+  transition: background 0.2s;
+}
+#nextBtn:hover { background: #1565c0; }
+#score { text-align: center; font-weight: bold; margin-top: 12px; font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2 id="question">Loading...</h2>
+  <div class="mode-select" id="modeDiv">
+    <button onclick="selectMode('serial')">Serial</button>
+    <button onclick="selectMode('random')">Random</button>
+    <button onclick="selectMode('random_no_repeat')">Random No Repeat</button>
+    <button onclick="selectMode('least_corrected')">Least Corrected</button>
+    <button id="storyBtn" onclick="toggleStoryMode()">Peaceful Story Mode</button>
+  </div>
+  <div id="options"></div>
+  <div id="explanation"></div>
+  <button id="nextBtn" onclick="nextQuestion()">Next ➡️</button>
+  <div id="score">Score: 0/0</div>
+</div>
+
+<script>
+let questions = [];
+let questionOrder = [];
+let current = 0;
+let total = 0;
+let correct = 0;
+let storyModeActive = false;
+let storyUtterance = null;
+
+// === JSON URL ===
+let url = "https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/gov_exams_objective_questions_cyphered.json";
+
+function decryptFullJSON(encryptedData) {
+  return encryptedData.map(row => {
+    let shift = "s".charCodeAt(0) - "n".charCodeAt(0);
+    let decryptedRow = {};
+    for (let k in row) {
+      let decKey = "", decValue = "";
+      for (let c of k) {
+        if (c.match(/[a-z]/i)) {
+          let code = c.charCodeAt(0);
+          let base = (code >= 65 && code <= 90) ? 65 : 97;
+          decKey += String.fromCharCode((code - base - shift + 26) % 26 + base);
+        } else decKey += c;
+      }
+      for (let c of row[k]) {
+        if (c.match(/[a-z]/i)) {
+          let code = c.charCodeAt(0);
+          let base = (code >= 65 && code <= 90) ? 65 : 97;
+          decValue += String.fromCharCode((code - base - shift + 26) % 26 + base);
+        } else decValue += c;
+      }
+      decryptedRow[decKey] = decValue;
+    }
+    return decryptedRow;
+  });
+}
+
+fetch(url)
+  .then(res => res.json())
+  .then(data => {
+    questions = decryptFullJSON(data);
+    document.getElementById('question').textContent = "Select mode to start the quiz...";
+    console.log("Decrypted questions loaded:", questions.length);
+  })
+  .catch(err => {
+    document.getElementById('question').textContent = "Failed to load questions.";
+    console.error(err);
+  });
+
+// ====================== MODES ======================
+function selectMode(mode) {
+  if (!questions.length) return;
+  document.getElementById('modeDiv').style.display = 'none';
+
+  if (mode === "serial") questionOrder = questions.map((_, i) => i);
+  else if (mode === "random") questionOrder = Array.from({length: questions.length}, () => Math.floor(Math.random() * questions.length));
+  else if (mode === "random_no_repeat") questionOrder = questions.map((_, i) => i).sort(() => Math.random() - 0.5);
+  else if (mode === "least_corrected") questionOrder = questions.map((q, i) => i).sort((a, b) => questions[a].count - questions[b].count);
+
+  current = 0; total = 0; correct = 0;
+  showQuestion();
+  updateScore();
+}
+
+// ====================== QUIZ CORE ======================
+function showQuestion() {
+  const q = questions[questionOrder[current]];
+  document.getElementById('question').textContent = `ID-${q.id}:- \n${q.question}`;
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+
+  for (let i = 1; i <= 4; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = q['option' + i];
+    btn.onclick = () => answer(i, btn);
+    optionsDiv.appendChild(btn);
+  }
+  document.getElementById('explanation').textContent = '';
+}
+
+function answer(choice, btn) {
+  const q = questions[questionOrder[current]];
+  total++;
+  document.querySelectorAll('#options button').forEach(b => b.disabled = true);
+  const correctIndex = parseInt(q.correct_option);
+
+  if (choice === correctIndex) {
+    correct++;
+    btn.classList.add('correct');
+    updateScore();
+    setTimeout(() => nextQuestion(), 500);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#options button')[correctIndex-1].classList.add('correct');
+    document.getElementById('explanation').textContent = "📘 Explanation: " + (q.explanation || "No explanation provided.");
+    updateScore();
+  }
+}
+
+function nextQuestion() {
+  if (!questionOrder.length) return;
+  current = (current + 1) % questionOrder.length;
+  showQuestion();
+}
+
+function updateScore() {
+  document.getElementById('score').textContent = `Score: ${correct}/${total}`;
+}
+
+// ====================== PEACEFUL STORY MODE ======================
+function toggleStoryMode() {
+  const btn = document.getElementById('storyBtn');
+  if (!questions.length) return;
+
+  if (!storyModeActive) {
+    storyModeActive = true;
+    btn.style.background = '#4CAF50'; // green while active
+    questionOrder = questions.map((_, i) => i).sort(() => Math.random() - 0.5); // random no repeat
+    current = 0;
+    speakStory();
+  } else {
+    storyModeActive = false;
+    btn.style.background = '#2979ff'; // normal blue
+    if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  }
+}
+
+function speakStory() {
+  if (!storyModeActive || current >= questionOrder.length) {
+    toggleStoryMode(); // stop automatically when finished
+    return;
+  }
+
+  const q = questions[questionOrder[current]];
+  const text = `Question ${current + 1}: ${q.question}. The correct answer is: ${q['option' + q.correct_option]}.`;
+
+  storyUtterance = new SpeechSynthesisUtterance(text);
+
+// ✅ Add below lines for better Indian female voice
+storyUtterance.lang = 'en-IN';
+const voices = window.speechSynthesis.getVoices();
+let femaleVoice = voices.find(v =>
+  v.name.toLowerCase().includes('female') && v.lang.includes('en-IN')
+)
+  || voices.find(v =>
+  v.name.toLowerCase().includes('heera') || v.name.toLowerCase().includes('zira')
+)
+  || voices.find(v => v.lang.includes('en-IN'))
+  || voices.find(v => v.name.toLowerCase().includes('female'))
+  || voices[0];
+if (femaleVoice) storyUtterance.voice = femaleVoice;
+// ✅ end new lines
+
+storyUtterance.rate = 0.9;
+storyUtterance.pitch = 1.0;
+storyUtterance.onend = () => {
+  current++;
+  if (storyModeActive) speakStory();
+};
+window.speechSynthesis.speak(storyUtterance);
+}
+speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+
+</script>
+</body>
+</html>
