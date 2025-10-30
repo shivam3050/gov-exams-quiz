@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Vocab Quiz - Banking & Finance</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Verdana,sans-serif;}
+body{background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px;}
+h1{text-align:center;font-size:1.4rem;margin-bottom:16px;text-shadow:0 2px 4px rgba(0,0,0,0.4);}
+.container{width:100%;max-width:600px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);border-radius:16px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.2);}
+textarea{width:100%;height:220px;padding:10px;font-size:0.9rem;border:2px solid #4a90e2;border-radius:12px;background:rgba(255,255,255,0.15);color:#fff;resize:vertical;margin-bottom:12px;}
+button{width:100%;padding:12px;font-size:1rem;font-weight:bold;background:#4CAF50;color:white;border:none;border-radius:10px;cursor:pointer;transition:0.2s;}
+button:active{transform:scale(0.97);}
+.quiz-area{display:none;flex-direction:column;gap:14px;}
+.question{background:rgba(255,255,255,0.15);padding:16px;border-radius:12px;font-size:1rem;line-height:1.5;text-align:center;animation:zoomIn 0.3s ease;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{padding:12px;border-radius:10px;background:rgba(255,255,255,0.2);border:2px solid transparent;font-weight:600;text-align:center;cursor:pointer;transition:0.2s;}
+.option-btn.correct{background:#4CAF50!important;border-color:#388e3c;}
+.option-btn.wrong{background:#f44336!important;border-color:#d32f2f;}
+
+@keyframes zoomIn{
+  0%{transform:scale(0.85);opacity:0;}
+  100%{transform:scale(1);opacity:1;}
+}
+
+@media(max-width:480px){
+  h1{font-size:1.2rem;}
+  .container{padding:12px;}
+  textarea{height:180px;font-size:0.85rem;}
+  .option-btn,button{font-size:0.9rem;padding:10px;}
+}
+</style>
+</head>
+<body>
+<h1>Banking Vocabulary Quiz</h1>
+
+<div class="container" id="inputContainer">
+  <textarea id="dataInput" placeholder="Paste your JSON data here..."></textarea>
+  <button id="startBtn">Start Quiz</button>
+</div>
+
+<div class="container quiz-area" id="quizArea">
+  <div class="question" id="questionText"></div>
+  <div class="options" id="options"></div>
+</div>
+
+<script>
+const dataInput=document.getElementById("dataInput");
+const startBtn=document.getElementById("startBtn");
+const inputContainer=document.getElementById("inputContainer");
+const quizArea=document.getElementById("quizArea");
+const questionText=document.getElementById("questionText");
+const optionsDiv=document.getElementById("options");
+let vocabData=[],isAnswered=false;
+
+startBtn.onclick=()=>{
+  let text=dataInput.value.trim();
+  if(!text){alert("Paste JSON data first, Sir.");return;}
+  try{vocabData=Object.entries(JSON.parse(text)).map(([word,info])=>({word,...info}));}
+  catch(e){alert("Invalid JSON format, Sir.");console.error(e);return;}
+  inputContainer.style.display="none";
+  quizArea.style.display="flex";
+  loadQuestion();
+};
+
+function loadQuestion(){
+  const q=vocabData[Math.floor(Math.random()*vocabData.length)];
+  const askSyn=Math.random()<0.5;
+  const correct=askSyn?q.synonyms[0]:q.antonyms[0];
+  const wrong=askSyn?q.antonyms[0]:q.synonyms[0];
+  const options=Math.random()<0.5?[correct,wrong]:[wrong,correct];
+  
+  questionText.innerHTML=`${q.sentence}<br><br><em>What is the <b>${askSyn?"SYNONYM":"ANTONYM"}</b> of <b>${q.word}</b>?</em>`;
+  questionText.style.animation="none";
+  void questionText.offsetWidth; // restart animation
+  questionText.style.animation="zoomIn 0.3s ease";
+  
+  optionsDiv.innerHTML="";
+  isAnswered=false;
+  options.forEach(opt=>{
+    const btn=document.createElement("div");
+    btn.className="option-btn";
+    btn.textContent=opt;
+    btn.onclick=()=>handleAnswer(btn,opt===correct);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function handleAnswer(btn,isCorrect){
+  if(isAnswered)return;
+  isAnswered=true;
+  btn.classList.add(isCorrect?"correct":"wrong");
+  setTimeout(loadQuestion,400);
+}
+</script>
+</body>
+</html>
