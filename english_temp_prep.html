@@ -1,98 +1,644 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Vocab Quiz - Banking & Finance</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Verdana,sans-serif;}
-body{background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px;}
-h1{text-align:center;font-size:1.4rem;margin-bottom:16px;text-shadow:0 2px 4px rgba(0,0,0,0.4);}
-.container{width:100%;max-width:600px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);border-radius:16px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.2);}
-textarea{width:100%;height:220px;padding:10px;font-size:0.9rem;border:2px solid #4a90e2;border-radius:12px;background:rgba(255,255,255,0.15);color:#fff;resize:vertical;margin-bottom:12px;}
-button{width:100%;padding:12px;font-size:1rem;font-weight:bold;background:#4CAF50;color:white;border:none;border-radius:10px;cursor:pointer;transition:0.2s;}
-button:active{transform:scale(0.97);}
-.quiz-area{display:none;flex-direction:column;gap:14px;}
-.question{background:rgba(255,255,255,0.15);padding:16px;border-radius:12px;font-size:1rem;line-height:1.5;text-align:center;animation:zoomIn 0.3s ease;}
-.options{display:flex;flex-direction:column;gap:10px;}
-.option-btn{padding:12px;border-radius:10px;background:rgba(255,255,255,0.2);border:2px solid transparent;font-weight:600;text-align:center;cursor:pointer;transition:0.2s;}
-.option-btn.correct{background:#4CAF50!important;border-color:#388e3c;}
-.option-btn.wrong{background:#f44336!important;border-color:#d32f2f;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>Vocab Quiz - Banking & Finance</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    }
 
-@keyframes zoomIn{
-  0%{transform:scale(0.85);opacity:0;}
-  100%{transform:scale(1);opacity:1;}
-}
+    body {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
 
-@media(max-width:480px){
-  h1{font-size:1.2rem;}
-  .container{padding:12px;}
-  textarea{height:180px;font-size:0.85rem;}
-  .option-btn,button{font-size:0.9rem;padding:10px;}
-}
-</style>
+    h1 {
+      text-align: center;
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    textarea {
+      width: 100%;
+      height: 220px;
+      padding: 10px;
+      font-size: 0.9rem;
+      border: 2px solid #4a90e2;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      resize: vertical;
+      margin-bottom: 12px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: #2979ff;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .quiz-area {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1rem;
+      line-height: 1.5;
+      text-align: center;
+      animation: zoomIn 0.3s ease;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid transparent;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .option-btn.correct {
+      background: #4CAF50 !important;
+      border-color: #388e3c;
+    }
+
+    .option-btn.wrong {
+      background: #f44336 !important;
+      border-color: #d32f2f;
+    }
+
+    #storyBtn {
+      background: #2979ff;
+      margin-top: 10px;
+    }
+
+    #storyBtn.active {
+      background: #4CAF50;
+    }
+
+    @keyframes zoomIn {
+      0% {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media(max-width:480px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .container {
+        padding: 12px;
+      }
+
+      textarea {
+        height: 180px;
+        font-size: 0.85rem;
+      }
+
+      .option-btn,
+      button {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<h1>Banking Vocabulary Quiz</h1>
+  <h1>Banking Vocabulary Quiz</h1>
 
-<div class="container" id="inputContainer">
-  <textarea id="dataInput" placeholder="Paste your JSON data here..."></textarea>
-  <button id="startBtn">Start Quiz</button>
-</div>
+  <div class="container" id="inputContainer">
+    <textarea id="dataInput" placeholder="Paste your JSON data here..."></textarea>
+    <button id="startBtn">Start Quiz</button>
+  </div>
 
-<div class="container quiz-area" id="quizArea">
-  <div class="question" id="questionText"></div>
-  <div class="options" id="options"></div>
-</div>
+  <div class="container quiz-area" id="quizArea">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <button id="storyBtn" style="display:none;">Start Story Mode</button>
+  </div>
 
-<script>
-const dataInput=document.getElementById("dataInput");
-const startBtn=document.getElementById("startBtn");
-const inputContainer=document.getElementById("inputContainer");
-const quizArea=document.getElementById("quizArea");
-const questionText=document.getElementById("questionText");
-const optionsDiv=document.getElementById("options");
-let vocabData=[],isAnswered=false;
 
-startBtn.onclick=()=>{
-  let text=dataInput.value.trim();
-  if(!text){alert("Paste JSON data first, Sir.");return;}
-  try{vocabData=Object.entries(JSON.parse(text)).map(([word,info])=>({word,...info}));}
-  catch(e){alert("Invalid JSON format, Sir.");console.error(e);return;}
-  inputContainer.style.display="none";
-  quizArea.style.display="flex";
-  loadQuestion();
-};
 
-function loadQuestion(){
-  const q=vocabData[Math.floor(Math.random()*vocabData.length)];
-  const askSyn=Math.random()<0.5;
-  const correct=askSyn?q.synonyms[0]:q.antonyms[0];
-  const wrong=askSyn?q.antonyms[0]:q.synonyms[0];
-  const options=Math.random()<0.5?[correct,wrong]:[wrong,correct];
-  
-  questionText.innerHTML=`${q.sentence}<br><br><em>What is the <b>${askSyn?"SYNONYM":"ANTONYM"}</b> of <b>${q.word}</b>?</em>`;
-  questionText.style.animation="none";
-  void questionText.offsetWidth; // restart animation
-  questionText.style.animation="zoomIn 0.3s ease";
-  
-  optionsDiv.innerHTML="";
-  isAnswered=false;
-  options.forEach(opt=>{
-    const btn=document.createElement("div");
-    btn.className="option-btn";
-    btn.textContent=opt;
-    btn.onclick=()=>handleAnswer(btn,opt===correct);
-    optionsDiv.appendChild(btn);
-  });
-}
+  <script>
+    const dataInput = document.getElementById("dataInput");
+    let demo = {
+      "ratified मंज़ूर किया": {
+        "sentence": "The board ratified the merger agreement unanimously, formally approved it, but did not reject it.",
+        "synonyms": ["formally approved औपचारिक रूप से मंज़ूर किया"],
+        "antonyms": ["reject ठुकराना"]
+      },
+      "flagged चिह्नित किया": {
+        "sentence": "The auditor flagged discrepancies in the balance sheet, highlighted them, but did not ignore them.",
+        "synonyms": ["highlighted उजागर किया"],
+        "antonyms": ["ignore अनदेखा करना"]
+      },
+      "orchestrated कुशलतापूर्वक संचालित किया": {
+        "sentence": "The CFO orchestrated a successful debt restructuring, managed it skillfully, but did not mismanage it.",
+        "synonyms": ["managed skillfully कुशलतापूर्वक प्रबंधित किया"],
+        "antonyms": ["mismanage गलत तरीके से संभालना"]
+      },
+      "imposed लागू किया": {
+        "sentence": "The regulator imposed stringent compliance norms, enforced them, but did not relax them.",
+        "synonyms": ["enforced लागू किया"],
+        "antonyms": ["relax ढील देना"]
+      },
+      "diversified विविधीकृत किया": {
+        "sentence": "The firm diversified its portfolio to mitigate risks, spread its investments, not concentrated them.",
+        "synonyms": ["varied विविध किया"],
+        "antonyms": ["concentrated केंद्रित किया"]
+      },
+      "liquidated परिसमाप्त किया": {
+        "sentence": "The bank liquidated its non-performing assets to recover funds, sold them off, not retained them.",
+        "synonyms": ["sold off बेचा"],
+        "antonyms": ["retain बनाए रखना"]
+      },
+      "scrutinized गहराई से जांचा": {
+        "sentence": "The committee scrutinized the project proposal minutely, examined carefully, not overlooked it.",
+        "synonyms": ["examined carefully सावधानी से जांचा"],
+        "antonyms": ["overlooked अनदेखा किया"]
+      },
+      "deferred स्थगित किया": {
+        "sentence": "The board deferred the dividend payment to next quarter, postponed it, not advanced it.",
+        "synonyms": ["postponed टाल दिया"],
+        "antonyms": ["advanced अग्रसर किया"]
+      },
+      "amended संशोधित किया": {
+        "sentence": "The shareholders amended the company charter to include ESG goals, altered it, not retained old clauses.",
+        "synonyms": ["altered बदला"],
+        "antonyms": ["retain बनाए रखना"]
+      },
+      "plummeted तेजी से गिरा": {
+        "sentence": "Stock prices plummeted after weak earnings, fell sharply, not rose suddenly.",
+        "synonyms": ["fell sharply तेजी से गिरा"],
+        "antonyms": ["soared तेजी से बढ़ा"]
+      },
+      "soared तेजी से बढ़ा": {
+        "sentence": "The firm's revenue soared due to high demand, rose rapidly, not declined.",
+        "synonyms": ["rose rapidly तेजी से बढ़ा"],
+        "antonyms": ["declined घटा"]
+      },
+      "consolidated एकीकृत किया": {
+        "sentence": "The company consolidated its subsidiaries under one brand, merged them, not fragmented them.",
+        "synonyms": ["merged विलय किया"],
+        "antonyms": ["fragmented विभाजित किया"]
+      },
+      "endorsed समर्थन किया": {
+        "sentence": "The CEO endorsed the new sustainability policy, approved it, not opposed it.",
+        "synonyms": ["approved मंज़ूर किया"],
+        "antonyms": ["opposed विरोध किया"]
+      },
+      "alleviated कम किया": {
+        "sentence": "The stimulus package alleviated financial distress among small firms, reduced pressure, not intensified it.",
+        "synonyms": ["reduced घटाया"],
+        "antonyms": ["intensified बढ़ाया"]
+      },
+      "revoked रद्द किया": {
+        "sentence": "The central bank revoked the licence of a non-compliant lender, cancelled it, not renewed it.",
+        "synonyms": ["cancelled निरस्त किया"],
+        "antonyms": ["renew नवीनीकृत किया"]
+      },
+      "curtailed सीमित किया": {
+        "sentence": "Due to inflation, the government curtailed subsidies, reduced them, not expanded them.",
+        "synonyms": ["reduced घटाया"],
+        "antonyms": ["expanded बढ़ाया"]
+      },
+      "streamlined सुव्यवस्थित किया": {
+        "sentence": "The startup streamlined its operations for efficiency, simplified them, not complicated them.",
+        "synonyms": ["simplified सरल बनाया"],
+        "antonyms": ["complicated जटिल बनाया"]
+      },
+      "stipulated निर्दिष्ट किया": {
+        "sentence": "The contract stipulated that payments be made within 30 days, specified clearly, not omitted details.",
+        "synonyms": ["specified निर्दिष्ट किया"],
+        "antonyms": ["omit छोड़ना"]
+      },
+      "procured प्राप्त किया": {
+        "sentence": "The firm procured raw materials from global suppliers, obtained them, not lost them.",
+        "synonyms": ["obtained प्राप्त किया"],
+        "antonyms": ["lost खोया"]
+      },
+      "surged बढ़ गया": {
+        "sentence": "Consumer spending surged after the festival season, rose sharply, not dwindled.",
+        "synonyms": ["rose sharply तेजी से बढ़ा"],
+        "antonyms": ["dwindled घटा"]
+      },
+      "subsidized सब्सिडी दी": {
+        "sentence": "The government subsidized renewable energy projects, financially supported them, not taxed them heavily.",
+        "synonyms": ["supported समर्थित किया"],
+        "antonyms": ["tax heavily अधिक कर लगाया"]
+      },
+      "defaulted भुगतान में असफल रहा": {
+        "sentence": "The borrower defaulted on the loan, failed to pay, not cleared dues.",
+        "synonyms": ["failed to pay भुगतान करने में विफल रहा"],
+        "antonyms": ["repaid चुका दिया"]
+      },
+      "pledged गिरवी रखा": {
+        "sentence": "The company pledged its shares as collateral, offered them, not retained them.",
+        "synonyms": ["offered प्रस्तुत किया"],
+        "antonyms": ["retain बनाए रखना"]
+      },
+      "accrued संचित हुआ": {
+        "sentence": "Interest accrued on the savings account monthly, accumulated, not diminished.",
+        "synonyms": ["accumulated एकत्र हुआ"],
+        "antonyms": ["diminished घटा"]
+      },
+      "invoiced बिल जारी किया": {
+        "sentence": "The supplier invoiced the client after delivery, billed them, not waived payment.",
+        "synonyms": ["billed बिल किया"],
+        "antonyms": ["waived माफ किया"]
+      },
+      "restructured पुनर्गठित किया": {
+        "sentence": "The bank restructured bad loans to recover faster, reorganized them, not abandoned them.",
+        "synonyms": ["reorganized पुनः व्यवस्थित किया"],
+        "antonyms": ["abandoned त्याग दिया"]
+      },
+      "sanctioned स्वीकृत किया": {
+        "sentence": "The board sanctioned funds for the new branch, approved allocation, not denied it.",
+        "synonyms": ["approved मंज़ूर किया"],
+        "antonyms": ["denied अस्वीकृत किया"]
+      },
+      "hedged जोखिम से बचाव किया": {
+        "sentence": "The trader hedged against currency fluctuations, protected investment, not exposed it.",
+        "synonyms": ["protected सुरक्षित किया"],
+        "antonyms": ["exposed उजागर किया"]
+      },
+      "audited लेखा-परीक्षित किया": {
+        "sentence": "The external agency audited financial statements thoroughly, examined them, not skipped review.",
+        "synonyms": ["examined जांचा"],
+        "antonyms": ["neglected उपेक्षित किया"]
+      },
+      "underwritten बीमा किया": {
+        "sentence": "The insurance company underwrote the policy, guaranteed payment, not refused coverage.",
+        "synonyms": ["guaranteed गारंटी दी"],
+        "antonyms": ["refused मना किया"]
+      },
+      "amortized परिशोधित किया": {
+        "sentence": "The company amortized its intangible assets over ten years, gradually reduced the book value, not expensed at once.",
+        "synonyms": ["gradually reduced धीरे-धीरे घटाया"],
+        "antonyms": ["expensed at once एक बार में खर्च किया"]
+      },
+      "liability देयता": {
+        "sentence": "A liability represents an obligation owed by the company, a debt, not an asset.",
+        "synonyms": ["obligation बाध्यता"],
+        "antonyms": ["asset परिसंपत्ति"]
+      },
+      "equity इक्विटी": {
+        "sentence": "Equity shows the ownership interest of shareholders, capital, not liability.",
+        "synonyms": ["ownership interest स्वामित्व हित"],
+        "antonyms": ["liability देयता"]
+      },
+      "dividend लाभांश": {
+        "sentence": "The board declared a 5% dividend for shareholders, profit distribution, not capital infusion.",
+        "synonyms": ["profit distribution लाभ का वितरण"],
+        "antonyms": ["capital infusion पूंजी निवेश"]
+      },
+      "leverage उत्तोलन": {
+        "sentence": "High leverage increases potential returns, using borrowed funds, not only own capital.",
+        "synonyms": ["borrowed capital उधार पूंजी"],
+        "antonyms": ["own funds स्वयं की पूंजी"]
+      },
+      "acquisition अधिग्रहण": {
+        "sentence": "The firm completed the acquisition of its rival, takeover, not divestment.",
+        "synonyms": ["takeover अधिग्रहण"],
+        "antonyms": ["divestment विनिवेश"]
+      },
+      "merger विलय": {
+        "sentence": "Two banks announced a merger to create a stronger entity, union, not separation.",
+        "synonyms": ["union संघ"],
+        "antonyms": ["separation विभाजन"]
+      },
+      "insolvent दिवालिया": {
+        "sentence": "The company became insolvent after heavy losses, unable to pay debts, not solvent.",
+        "synonyms": ["bankrupt दिवालिया"],
+        "antonyms": ["solvent सक्षमता"]
+      },
+      "tender निविदा": {
+        "sentence": "The government invited a tender for road construction, formal offer, not private deal.",
+        "synonyms": ["bid बोली"],
+        "antonyms": ["private deal निजी समझौता"]
+      },
+      "audit लेखा परीक्षा": {
+        "sentence": "An external audit ensures transparency, independent review, not manipulation.",
+        "synonyms": ["inspection निरीक्षण"],
+        "antonyms": ["manipulation हेराफेरी"]
+      },
+      "benchmark मानक": {
+        "sentence": "The bank used LIBOR as a benchmark for loans, standard reference, not random figure.",
+        "synonyms": ["standard मानक"],
+        "antonyms": ["random figure यादृच्छिक आंकड़ा"]
+      },
+      "bond ऋण पत्र": {
+        "sentence": "The government issued a ten-year bond, debt instrument, not equity share.",
+        "synonyms": ["debt instrument ऋण साधन"],
+        "antonyms": ["equity share इक्विटी शेयर"]
+      },
+      "broker दलाल": {
+        "sentence": "A stockbroker facilitates trade between buyers and sellers, intermediary, not principal.",
+        "synonyms": ["intermediary मध्यस्थ"],
+        "antonyms": ["principal प्रमुख"]
+      },
+      "capital पूंजी": {
+        "sentence": "Capital is money invested to generate profit, funds, not expense.",
+        "synonyms": ["funds निधि"],
+        "antonyms": ["expense व्यय"]
+      },
+      "collateral गिरवी": {
+        "sentence": "Collateral is an asset pledged for a loan, security, not liability.",
+        "synonyms": ["security सुरक्षा"],
+        "antonyms": ["liability देयता"]
+      },
+      "depreciation मूल्यह्रास": {
+        "sentence": "Depreciation accounts for asset wear over time, value loss, not appreciation.",
+        "synonyms": ["value loss मूल्य हानि"],
+        "antonyms": ["appreciation मूल्यवृद्धि"]
+      },
+      "diversification विविधीकरण": {
+        "sentence": "Diversification reduces portfolio risk, spreading investments, not concentration.",
+        "synonyms": ["spreading investments निवेश फैलाव"],
+        "antonyms": ["concentration एकाग्रता"]
+      },
+      "fiduciary न्यासी": {
+        "sentence": "A fiduciary holds assets in trust, caretaker role, not ownership.",
+        "synonyms": ["trustee न्यासी"],
+        "antonyms": ["owner स्वामी"]
+      },
+      "liquidity तरलता": {
+        "sentence": "Liquidity shows how easily assets convert to cash, flexibility, not rigidity.",
+        "synonyms": ["cash-convertibility नकद परिवर्तन क्षमता"],
+        "antonyms": ["rigidity कठोरता"]
+      },
+      "mortgage बंधक": {
+        "sentence": "A mortgage is a loan secured by real property, home loan, not lease.",
+        "synonyms": ["home loan आवास ऋण"],
+        "antonyms": ["lease पट्टा"]
+      },
+      "overdraft ओवरड्राफ्ट": {
+        "sentence": "Overdraft lets account holders withdraw more than balance, temporary credit, not deposit.",
+        "synonyms": ["temporary credit अस्थायी ऋण"],
+        "antonyms": ["deposit जमा"]
+      },
+      "portfolio पोर्टफोलियो": {
+        "sentence": "A portfolio contains a mix of investments, collection, not single asset.",
+        "synonyms": ["collection संग्रह"],
+        "antonyms": ["single asset एकल संपत्ति"]
+      },
+      "recession मंदी": {
+        "sentence": "A recession is a prolonged economic slowdown, downturn, not boom.",
+        "synonyms": ["downturn गिरावट"],
+        "antonyms": ["boom उछाल"]
+      },
+      "remittance प्रेषण": {
+        "sentence": "Remittance is money sent abroad by workers, transfer, not withdrawal.",
+        "synonyms": ["transfer हस्तांतरण"],
+        "antonyms": ["withdrawal निकासी"]
+      },
+      "securities प्रतिभूतियाँ": {
+        "sentence": "Securities represent financial instruments, tradable assets, not liabilities.",
+        "synonyms": ["financial instruments वित्तीय साधन"],
+        "antonyms": ["liabilities देयताएँ"]
+      },
+      "subsidy सब्सिडी": {
+        "sentence": "A subsidy is financial help by government, aid, not tax.",
+        "synonyms": ["aid सहायता"],
+        "antonyms": ["tax कर"]
+      },
+      "tariff शुल्क": {
+        "sentence": "A tariff is a tax on imports or exports, duty, not exemption.",
+        "synonyms": ["duty शुल्क"],
+        "antonyms": ["exemption छूट"]
+      },
+      "valuation मूल्यांकन": {
+        "sentence": "Valuation estimates the worth of an asset, appraisal, not ignorance.",
+        "synonyms": ["appraisal आकलन"],
+        "antonyms": ["ignorance उपेक्षा"]
+      },
+      "venture उपक्रम": {
+        "sentence": "A venture is a new risky business, enterprise, not certainty.",
+        "synonyms": ["enterprise उद्यम"],
+        "antonyms": ["certainty निश्चितता"]
+      },
+      "withholding कर रोक": {
+        "sentence": "Withholding tax is deducted at source, retention, not disbursement.",
+        "synonyms": ["retention रोकना"],
+        "antonyms": ["disbursement वितरण"]
+      },
+      "annuity वार्षिकी": {
+        "sentence": "An annuity provides fixed yearly payments, pension-like, not lump sum.",
+        "synonyms": ["yearly payment वार्षिक भुगतान"],
+        "antonyms": ["lump sum एकमुश्त राशि"]
+      },
+      "appraisal मूल्यांकन": {
+        "sentence": "An appraisal determines asset or employee value, assessment, not neglect.",
+        "synonyms": ["assessment आकलन"],
+        "antonyms": ["neglect उपेक्षा"]
+      },
+      "audit trail लेखा-परीक्षण अभिलेख": {
+        "sentence": "An audit trail is a record of financial transactions, trace, not concealment.",
+        "synonyms": ["record अभिलेख"],
+        "antonyms": ["concealment छिपाव"]
+      },
+      "arbitrage मूल्य-अंतर लाभ": {
+        "sentence": "Arbitrage profits from price differences, simultaneous buy-sell, not speculation.",
+        "synonyms": ["price gap trading मूल्य अंतर व्यापार"],
+        "antonyms": ["speculation सट्टा"]
+      },
+      "liquefied तरलीकृत किया": {
+        "sentence": "Natural gas is liquefied for transport, converted to liquid, not solidified.",
+        "synonyms": ["converted to liquid द्रव में बदला"],
+        "antonyms": ["solidified ठोस किया"]
+      },
+      "monetized मुद्रीकृत किया": {
+        "sentence": "The platform monetized its content through ads, generated revenue, not provided free.",
+        "synonyms": ["generated revenue राजस्व उत्पन्न किया"],
+        "antonyms": ["offered free निःशुल्क दिया"]
+      },
+      "sublet उपकिराया दिया": {
+        "sentence": "He sublet his apartment to another tenant, leased further, not occupied himself.",
+        "synonyms": ["leased किराए पर दिया"],
+        "antonyms": ["occupied स्वयं रखा"]
+      },
+      "capitalized पूंजीकृत किया": {
+        "sentence": "The startup capitalized on market demand, utilized opportunity, not ignored it.",
+        "synonyms": ["utilized इस्तेमाल किया"],
+        "antonyms": ["ignored अनदेखा किया"]
+      },
+      "collaborated सहयोग किया": {
+        "sentence": "The firms collaborated on a joint project, worked together, not competed.",
+        "synonyms": ["worked together साथ काम किया"],
+        "antonyms": ["competed प्रतिस्पर्धा की"]
+      },
+      "inflated फुलाया गया": {
+        "sentence": "Prices inflated due to demand, increased sharply, not deflated.",
+        "synonyms": ["increased बढ़ा"],
+        "antonyms": ["deflated घटा"]
+      },
+      "deflated घटाया गया": {
+        "sentence": "After policy control, prices deflated gradually, decreased, not inflated.",
+        "synonyms": ["decreased घटाया"],
+        "antonyms": ["inflated बढ़ाया"]
+      }
+    }
+    dataInput.textContent = JSON.stringify(demo)
+    const startBtn = document.getElementById("startBtn");
+    const inputContainer = document.getElementById("inputContainer");
+    const quizArea = document.getElementById("quizArea");
+    const questionText = document.getElementById("questionText");
+    const optionsDiv = document.getElementById("options");
+    const storyBtn = document.getElementById("storyBtn");
 
-function handleAnswer(btn,isCorrect){
-  if(isAnswered)return;
-  isAnswered=true;
-  btn.classList.add(isCorrect?"correct":"wrong");
-  setTimeout(loadQuestion,400);
-}
-</script>
+    let vocabData = [], isAnswered = false;
+    let storyModeActive = false, storyOrder = [], current = 0, storyUtterance = null;
+
+    // === QUIZ START ===
+    startBtn.onclick = () => {
+      let text = dataInput.value.trim();
+      if (!text) { alert("Paste JSON data first, Sir."); return; }
+      try { vocabData = Object.entries(JSON.parse(text)).map(([word, info]) => ({ word, ...info })); }
+      catch (e) { alert("Invalid JSON format, Sir."); console.error(e); return; }
+      inputContainer.style.display = "none";
+      quizArea.style.display = "flex";
+      storyBtn.style.display = "block";
+      loadQuestion();
+    };
+
+    // === QUESTION DISPLAY ===
+    function loadQuestion() {
+      const q = vocabData[Math.floor(Math.random() * vocabData.length)];
+      const askSyn = Math.random() < 0.5;
+      const correct = askSyn ? q.synonyms[0] : q.antonyms[0];
+      const wrong = askSyn ? q.antonyms[0] : q.synonyms[0];
+      const options = Math.random() < 0.5 ? [correct, wrong] : [wrong, correct];
+
+      questionText.innerHTML = `${q.sentence}<br><br><em>What is the <b>${askSyn ? "SYNONYM" : "ANTONYM"}</b> of <b>${q.word}</b>?</em>`;
+      questionText.style.animation = "none"; void questionText.offsetWidth;
+      questionText.style.animation = "zoomIn 0.3s ease";
+
+      optionsDiv.innerHTML = "";
+      isAnswered = false;
+      options.forEach(opt => {
+        const btn = document.createElement("div");
+        btn.className = "option-btn";
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(btn, opt === correct);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(btn, isCorrect) {
+      if (isAnswered) return;
+      isAnswered = true;
+      btn.classList.add(isCorrect ? "correct" : "wrong");
+      setTimeout(loadQuestion, 400);
+    }
+
+    // ====================== PEACEFUL STORY MODE ======================
+    storyBtn.onclick = () => toggleStoryMode();
+
+    function toggleStoryMode() {
+      if (!vocabData.length) return;
+      const btn = storyBtn;
+
+      if (!storyModeActive) {
+        storyModeActive = true;
+        btn.classList.add("active");
+        btn.textContent = "Pause Story Mode";
+        storyOrder = vocabData.map((_, i) => i).sort(() => Math.random() - 0.5);
+        current = 0;
+        speakStory();
+      } else {
+        storyModeActive = false;
+        btn.classList.remove("active");
+        btn.textContent = "Start Story Mode";
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speakStory() {
+      if (!storyModeActive || current >= storyOrder.length) {
+        storyModeActive = false;
+        storyBtn.classList.remove("active");
+        storyBtn.textContent = "Start Story Mode";
+        return;
+      }
+
+      const q = vocabData[storyOrder[current]];
+      const text = `Sentence: ${q.sentence}. What is the synonym of ${q.word}? The synonym of ${q.word} is ${q.synonyms[0]}.`;
+
+      storyUtterance = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      storyUtterance.lang = 'en-IN';
+      let femaleVoice = voices.find(v => v.name.toLowerCase().includes('female') && v.lang.includes('en-IN'))
+        || voices.find(v => v.name.toLowerCase().includes('heera') || v.name.toLowerCase().includes('zira'))
+        || voices.find(v => v.lang.includes('en-IN'))
+        || voices.find(v => v.name.toLowerCase().includes('female'))
+        || voices[0];
+      if (femaleVoice) storyUtterance.voice = femaleVoice;
+
+      storyUtterance.rate = 0.9;
+      storyUtterance.pitch = 1.0;
+      storyUtterance.onend = () => {
+        current++;
+        if (storyModeActive) speakStory();
+      };
+      window.speechSynthesis.speak(storyUtterance);
+    }
+
+    speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  </script>
 </body>
+
 </html>
