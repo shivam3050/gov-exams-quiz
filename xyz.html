@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,7 +48,9 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    input, button, a {
+    input,
+    button,
+    a {
       -webkit-user-select: text;
       user-select: text;
     }
@@ -75,7 +72,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: 
+      background:
         radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.12) 0%, transparent 50%);
       pointer-events: none;
@@ -93,7 +90,7 @@
       min-height: 600px;
       border-radius: 24px;
       padding: 28px;
-      box-shadow: 
+      box-shadow:
         0 0 0 1px rgba(99, 102, 241, 0.2),
         0 20px 60px -12px rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(99, 102, 241, 0.15);
@@ -105,20 +102,18 @@
       content: '';
       position: absolute;
       inset: -2px;
-      background: linear-gradient(
-        135deg,
-        transparent 0%,
-        rgba(99, 102, 241, 0.1) 25%,
-        transparent 50%,
-        rgba(236, 72, 153, 0.1) 75%,
-        transparent 100%
-      );
+      background: linear-gradient(135deg,
+          transparent 0%,
+          rgba(99, 102, 241, 0.1) 25%,
+          transparent 50%,
+          rgba(236, 72, 153, 0.1) 75%,
+          transparent 100%);
       border-radius: 24px;
       z-index: -1;
       opacity: 0.5;
     }
 
-    .card > * {
+    .card>* {
       position: relative;
       z-index: 1;
     }
@@ -139,7 +134,7 @@
       line-height: 1.1;
     }
 
-    .welcome-text > *:not(h1) {
+    .welcome-text>*:not(h1) {
       font-size: 0.9rem;
       line-height: 1.6;
       color: var(--text-secondary);
@@ -154,10 +149,10 @@
       border-radius: 50%;
       margin: 20px auto;
       position: relative;
-      background: 
+      background:
         radial-gradient(circle at 35% 35%, rgba(99, 102, 241, 0.15), transparent 60%),
         radial-gradient(circle at center, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98));
-      box-shadow: 
+      box-shadow:
         inset 0 4px 20px rgba(0, 0, 0, 0.5),
         0 8px 40px rgba(99, 102, 241, 0.25);
     }
@@ -225,14 +220,15 @@
     .links {
       display: grid;
       max-height: 160px;
+      min-height: 100px;
       overflow-y: auto;
-      gap: 10px;
-      padding: 8px 0;
+      gap: 12px;
+      padding: 14px 14px;
       margin-top: 20px;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     }
 
-    .a {
+    a {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -251,7 +247,7 @@
       min-height: 48px;
     }
 
-    .a::before {
+    a::before {
       content: '';
       position: absolute;
       inset: 0;
@@ -260,15 +256,26 @@
       transition: opacity 0.3s ease;
     }
 
-    .a:active {
+    a:active {
       transform: scale(0.96);
     }
 
-    .a span, .a div {
+    a span,
+    a div {
       position: relative;
       z-index: 1;
     }
-
+    a:hover{
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      transform: scale(1.02);
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.5);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
     .dropdown {
       position: absolute;
       top: 16px;
@@ -308,7 +315,7 @@
       max-width: calc(100vw - 32px);
       max-height: 60vh;
       overflow-y: auto;
-      box-shadow: 
+      box-shadow:
         0 24px 72px rgba(0, 0, 0, 0.7),
         0 0 0 1px rgba(99, 102, 241, 0.2);
     }
@@ -419,7 +426,7 @@
         font-size: 1.8rem;
       }
 
-      .welcome-text > *:not(h1) {
+      .welcome-text>*:not(h1) {
         font-size: 0.85rem;
       }
 
@@ -450,7 +457,10 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
@@ -476,11 +486,12 @@
       </div>
 
       <div class="links">
-        <button class="a" id="jsrunner">JS Runner</button>
-        <button class="a" onclick="goNow('https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/english_temp_prep.html_encrypted.json')">Vocabulary</button>
-        <a class="a" href="https://chatgpt.com/" target="_blank">ChatGPT</a>
-        <button class="a" onclick="goNow('https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/question_trainer_html.html_encrypted.json')">ExamsTrainer</button>
-        <a class="a" href="https://shivam3050.github.io/LegalDocumentsAndInformation.github.io/#" target="_blank">Legal & Docs Info</a>
+        <a href="#" id="jsrunner" target="_blank">JS Runner</a>
+        <a           onclick="goNow('https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/english_temp_prep.html_encrypted.json')">Vocabulary</a>
+        <a href="https://chatgpt.com/" target="_blank">ChatGPT</a>
+        <a           onclick="goNow('https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/question_trainer_html.html_encrypted.json')">ExamsTrainer</a>
+        <a href="https://shivam3050.github.io/LegalDocumentsAndInformation.github.io/#" target="_blank">Legal
+          & Docs Info</a>
       </div>
     </div>
 
@@ -500,7 +511,9 @@
     const fileUrl = "file:///C:/Users/LENOVO/OneDrive/Desktop/DUSTBIN/garbage.html";
     const webUrl = "https://jsrunner.onrender.com";
     const link = document.getElementById("jsrunner");
+
     link.addEventListener("click", () => {
+     
       link.href = navigator.onLine ? webUrl : fileUrl;
     });
 
@@ -644,7 +657,7 @@
         const a = document.createElement('a');
         a.href = url;
         a.target = '_blank';
-        
+
         const span = document.createElement('span');
         span.className = 'remove';
         span.innerHTML = '✖';
@@ -653,17 +666,17 @@
           e.preventDefault();
           removeBookmark(i);
         };
-        
+
         const text = document.createElement("div");
         const favicon = document.createElement("img");
         favicon.src = "https://www.google.com/s2/favicons?sz=32&domain_url=" + encodeURIComponent(url);
         favicon.style.width = "16px";
         favicon.style.height = "16px";
         favicon.style.marginRight = "8px";
-        
+
         let url2 = url?.split("://")[1];
         text.textContent = url2 || url;
-        
+
         a.appendChild(favicon);
         a.appendChild(text);
         a.appendChild(span);
@@ -684,38 +697,39 @@
 
 
 
-// Continuous downward scrolling
-const linksContainer = document.querySelector('.links');
-let scrollSpeed = 0.8; // Adjust for faster/slower scrolling
+    // Continuous downward scrolling
+    const linksContainer = document.querySelector('.links');
+    let scrollSpeed = 0.8; // Adjust for faster/slower scrolling
 
-function autoScrollUp() {
-  linksContainer.scrollTop += scrollSpeed; // Scroll downward
-  
-  // Smoothly loop back when reaching bottom
-  if (linksContainer.scrollTop >= linksContainer.scrollHeight / 2) {
-    linksContainer.scrollTop = 0;
-  }
-  
-  requestAnimationFrame(autoScrollUp);
-}
+    function autoScrollUp() {
+      linksContainer.scrollTop += scrollSpeed; // Scroll downward
 
-// Duplicate the links content for seamless loop
-function duplicateLinks() {
-  const links = linksContainer.innerHTML;
-  linksContainer.innerHTML = links + links; // Double the content
-}
+      // Smoothly loop back when reaching bottom
+      if (linksContainer.scrollTop >= linksContainer.scrollHeight / 2) {
+        linksContainer.scrollTop = 0;
+      }
 
-// Start everything only on screens smaller than 560px
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.innerWidth < 600) {
-    duplicateLinks();
-    setTimeout(() => {
-      linksContainer.scrollTop = 0; // Start at top
-      autoScrollUp();
-    }, 500);
-  }
-});
+      requestAnimationFrame(autoScrollUp);
+    }
+
+    // Duplicate the links content for seamless loop
+    // function duplicateLinks() {
+    //   const links = linksContainer.innerHTML;
+    //   linksContainer.innerHTML = links + links; // Double the content
+    // }
+
+    // Start everything only on screens smaller than 560px
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.innerWidth < 600) {
+        duplicateLinks();
+        setTimeout(() => {
+          linksContainer.scrollTop = 0; // Start at top
+          autoScrollUp();
+        }, 500);
+      }
+    });
   </script>
-  
+
 </body>
+
 </html>
