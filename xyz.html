@@ -624,46 +624,109 @@
       w.document.close();
     }
 
-    async function fetchAndDecrypt(url, password) {
-      const shift = parseInt(password);
-      if (!url) {
-        alert('Please enter a GitHub URL');
-        return;
-      }
-      if (isNaN(shift) || shift === 0) {
-        alert('Please enter a valid password value');
-        return;
-      }
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const text = await response.text();
-        const data = JSON.parse(text);
-        const encryptedText = data.payload;
-        if (!encryptedText) {
-          throw new Error('No payload found in JSON file');
-        }
-        return caesarDecrypt(encryptedText, shift);
-      } catch (error) {
-        console.error('Decryption error:', error);
-      }
-    }
+    // async function fetchAndDecrypt(url, password) {
+    //   const shift = parseInt(password);
+    //   if (!url) {
+    //     alert('Please enter a GitHub URL');
+    //     return;
+    //   }
+    //   if (isNaN(shift) || shift === 0) {
+    //     alert('Please enter a valid password value');
+    //     return;
+    //   }
+    //   try {
+    //     const response = await fetch(url);
+    //     if (!response.ok) {
+    //       throw new Error(`HTTP error! Status: ${response.status}`);
+    //     }
+    //     const text = await response.text();
+    //     const data = JSON.parse(text);
+    //     const encryptedText = data.payload;
+    //     if (!encryptedText) {
+    //       throw new Error('No payload found in JSON file');
+    //     }
+    //     return caesarDecrypt(encryptedText, shift);
+    //   } catch (error) {
+    //     console.error('Decryption error:', error);
+    //   }
+    // }
 
-    function caesarDecrypt(text, shift) {
-      let result = '';
-      for (let i = 0; i < text.length; i++) {
-        let char = text[i];
-        if (/[a-zA-Z]/.test(char)) {
-          let base = char === char.toUpperCase() ? 65 : 97;
-          result += String.fromCharCode(((char.charCodeAt(0) - base - shift + 26) % 26) + base);
-        } else {
-          result += char;
-        }
-      }
-      return result;
+    // function caesarDecrypt(text, shift) {
+    //   let result = '';
+    //   for (let i = 0; i < text.length; i++) {
+    //     let char = text[i];
+    //     if (/[a-zA-Z]/.test(char)) {
+    //       let base = char === char.toUpperCase() ? 65 : 97;
+    //       result += String.fromCharCode(((char.charCodeAt(0) - base - shift + 26) % 26) + base);
+    //     } else {
+    //       result += char;
+    //     }
+    //   }
+    //   return result;
+    // }
+
+
+
+
+
+    async function fetchAndDecrypt(url, password) {
+  const shift = parseInt(password);
+  if (!url) {
+    alert('Please enter a GitHub URL');
+    return;
+  }
+  if (isNaN(shift) || shift === 0) {
+    alert('Please enter a valid password value');
+    return;
+  }
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const text = await response.text();
+    const data = JSON.parse(text);
+    const encryptedText = data.payload;
+    if (!encryptedText) {
+      throw new Error('No payload found in JSON file');
+    }
+    return caesarDecrypt(encryptedText, shift);
+  } catch (error) {
+    console.error('Decryption error:', error);
+  }
+}
+
+function isDevanagari(char) {
+  const code = char.codePointAt(0);
+  return (code >= 0x0900 && code <= 0x097F) ||  // Main Devanagari block
+         (code >= 0xA8E0 && code <= 0xA8FF) ||  // Devanagari Extended
+         (code >= 0x1CD0 && code <= 0x1CFF);    // Vedic Extensions
+}
+
+function caesarDecrypt(text, shift) {
+  let result = '';
+  for (let i = 0; i < text.length; i++) {
+    let char = text[i];
+    
+    // Skip Devanagari characters - leave them unchanged
+    if (isDevanagari(char)) {
+      result += char;
+    } else if (/[a-zA-Z]/.test(char)) {
+      let base = char === char.toUpperCase() ? 65 : 97;
+      result += String.fromCharCode(((char.charCodeAt(0) - base - shift + 26) % 26) + base);
+    } else {
+      result += char;
+    }
+  }
+  return result;
+}
+
+
+
+
+
+
+
 
     const hourHand = document.getElementById("hourHand");
 
