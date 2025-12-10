@@ -6,8 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0a0e27" />
   <title>Welcome Shivam</title>
-
-  <style>
+    <style>
     :root {
       --primary: #6366f1;
       --primary-light: #818cf8;
@@ -63,9 +62,12 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      min-height: 100svh;
+      height: 100vh;
+      height: 100svh;
       overflow-x: hidden;
       position: relative;
-      padding: 16px;
+      
     }
 
     body::before {
@@ -79,15 +81,30 @@
     }
 
     .container {
-      position: relative;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 360px;
+      min-height: 630px;
+      max-width: 1080px;
+      max-height: 1280px;
+      height: 100%;
       width: 100%;
-      max-width: 540px;
+      /* max-height: 100%; */
       z-index: 1;
     }
 
     .card {
       background: rgba(15, 23, 42, 0.7);
-      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 620px;
+      min-width: 330px;
+      max-width: 580px;
+      height: 85%;
+      width: 80%;
       border-radius: 24px;
       padding: 28px;
       box-shadow:
@@ -113,17 +130,33 @@
       opacity: 0.5;
     }
 
+    .dropdown-overlay{
+      display: none;
+
+    }
+    .overlay-active{
+      display: block;
+            height: 100%;
+      width: 100%;
+      background: transparent;
+      position: absolute;
+      z-index: 10;
+    }
+
+
+
     .card>* {
       position: relative;
       z-index: 1;
     }
+
 
     .welcome-text {
       margin-bottom: 24px;
     }
 
     h1 {
-      font-size: clamp(2rem, 8vw, 3rem);
+      font-size: clamp(2.2rem, 9vw, 2.5rem);
       font-weight: 800;
       margin-bottom: 12px;
       background: linear-gradient(135deg, #818cf8 0%, #ec4899 60%, #f472b6 100%);
@@ -132,22 +165,27 @@
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.02em;
       line-height: 1.1;
+      
     }
 
     .welcome-text>*:not(h1) {
-      font-size: 0.9rem;
+      font-size: 1.9rem;
       line-height: 1.6;
       color: var(--text-secondary);
       font-weight: 400;
     }
 
     .analog-clock {
-      width: min(200px, 90%);
-      height: min(200px, 90%);
+      width: max(350px, 40%);
+      height: max(350px, 40%);
+      
+      width: auto;
       aspect-ratio: 1;
       border: 3px solid rgba(99, 102, 241, 0.3);
       border-radius: 50%;
-      margin: 20px auto;
+      margin-inline: auto;
+      margin-top: 30px;
+      margin-block: 20px;
       position: relative;
       background:
         radial-gradient(circle at 35% 35%, rgba(99, 102, 241, 0.15), transparent 60%),
@@ -206,7 +244,7 @@
       top: 12px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.95rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--text);
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
@@ -217,16 +255,22 @@
       inset: 0;
     }
 
-    .links {
+
+
+ 
+      .links {
       display: grid;
-      max-height: 160px;
-      min-height: 100px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+  grid-auto-rows: auto;
+  grid-template-rows: repeat(2, auto);
+      max-height: 140px;
+      
+      min-height: 120px;
       overflow-y: auto;
-      gap: 12px;
+      gap: 10px;
       padding: 14px 14px;
-      margin-top: 20px;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    }
+      margin-top: 15px;
+    }  
 
     a {
       display: flex;
@@ -239,7 +283,7 @@
       color: var(--text);
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
       position: relative;
@@ -276,11 +320,35 @@
       box-shadow: 0 2px 10px rgba(99, 102, 241, 0.5);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .dropdown {
+    .dropdown  {
+    
+      /* top: 16px; */
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 18px;
+      outline: none;
+      right: 16px;
+    display: none;
+      position: absolute;
+      max-height: 70%;
+      top: 56px;
+      
+      overflow-y: auto;
+      overflow-x: hidden;
+
+
+      z-index: 110;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+        .open{
+      display: block;
+      z-index: 110;
+    }
+
+    .dropdown-btn {
       position: absolute;
       top: 16px;
       right: 16px;
-      z-index: 1000;
+      z-index: 1;
     }
 
     .dropdown-btn {
@@ -302,22 +370,26 @@
     }
 
     .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 56px;
-      right: 0;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(40px);
+
+      background: rgba(15, 23, 42);
+      /* backdrop-filter: blur(40px); */
       border: 1px solid rgba(99, 102, 241, 0.25);
       border-radius: 18px;
       padding: 20px;
+      
       min-width: 300px;
       max-width: calc(100vw - 32px);
-      max-height: 60vh;
+      /* max-height: 60vh; */
+      outline: none;
       overflow-y: auto;
-      box-shadow:
+      
+      /* box-shadow:
         0 24px 72px rgba(0, 0, 0, 0.7),
-        0 0 0 1px rgba(99, 102, 241, 0.2);
+        0 0 0 1px rgba(99, 102, 241, 0.2); */
+
+
+      
+      
     }
 
     .dropdown-content section {
@@ -420,10 +492,12 @@
       .card {
         padding: 20px;
         min-height: auto;
+        height: 90%;
       }
 
       h1 {
         font-size: 1.8rem;
+        margin-top: 10px;
       }
 
       .welcome-text>*:not(h1) {
@@ -431,23 +505,44 @@
       }
 
       .analog-clock {
-        width: min(180px, 85%);
-        height: min(180px, 85%);
-        margin: 16px auto;
+        width: min(215px, 85%);
+        height: min(215px, 85%);
+        height: auto;
+        margin-inline: auto;
+        margin-block: 5px;
+        margin-top: 5px;
       }
 
+          .number span {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+          }
       .links {
         grid-template-columns: 1fr;
-        gap: 8px;
-        max-height: 180px;
+        gap: 10px;
+        max-height: 120px;
+        margin-top: 5px;
+ 
+        font-size: 0.15rem;
+        
       }
 
-      .a {
+
+
+
+      a {
         padding: 12px 14px;
+        font-size: 0.95rem;
+        height: 35px;
+      
       }
 
       .dropdown {
         top: 12px;
+        top: 42px;
         right: 12px;
       }
 
@@ -470,7 +565,8 @@
 
 <body>
   <div class="container">
-    <div class="card" onclick="event.stopPropagation(); document.getElementById('bookmarkMenu').style.display='none';">
+    <section id="dropdown-overlay" onclick="toggleDropdownViaOverlay()"></section>
+    <div class="card" onclick="event.stopPropagation()">
       <div class="welcome-text">
         <h1>Hello, Shivam!</h1>
         Eternity gave life its meaning: <br>
@@ -486,28 +582,29 @@
       </div>
 
       <div class="links">
-        <a href="#" id="jsrunner" target="_blank">JS Runner</a>
         <a           onclick="goNow('https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/english_temp_prep.html_encrypted.json')">Vocabulary</a>
-        <a href="https://chatgpt.com/" target="_blank">ChatGPT</a>
         <a           onclick="goNow('https://raw.githubusercontent.com/shivam3050/gov-exams-quiz/main/question_trainer_html.html_encrypted.json')">ExamsTrainer</a>
+        <a href="#" id="jsrunner" target="_blank">JS Runner</a>
+        <a href="https://chatgpt.com/" target="_blank">ChatGPT</a>
         <a href="https://shivam3050.github.io/LegalDocumentsAndInformation.github.io/#" target="_blank">Legal
           & Docs Info</a>
       </div>
+      <input type="button" value="🔖" class="dropdown-btn" onclick="toggleDropdownViaButton()">
+      <div class="dropdown" id="dropdown">
+        <div class="dropdown-content" id="bookmarkMenu">
+          <section>
+            <input type="text" id="bookmarkInput" placeholder="Enter URL and hit Enter" onkeydown="handleKey(event)" />
+            <input type="button" onclick="handleKeyAdd(event)" value="➕" />
+          </section>
+          <div id="bookmarkList"></div>
+        </div>
+    </div>
     </div>
 
-    <div class="dropdown">
-      <input type="button" value="🔖" class="dropdown-btn" onclick="toggleDropdown()">
-      <div class="dropdown-content" id="bookmarkMenu">
-        <section>
-          <input type="text" id="bookmarkInput" placeholder="Enter URL and hit Enter" onkeydown="handleKey(event)" />
-          <input type="button" onclick="handleKeyAdd(event)" value="➕" />
-        </section>
-        <div id="bookmarkList"></div>
-      </div>
-    </div>
   </div>
 
-  <script>
+<script>
+
     const fileUrl = "file:///C:/Users/LENOVO/OneDrive/Desktop/DUSTBIN/garbage.html";
     const webUrl = "https://jsrunner.onrender.com";
     const link = document.getElementById("jsrunner");
@@ -569,6 +666,9 @@
     }
 
     const hourHand = document.getElementById("hourHand");
+
+    hourHand.style.background = "red"
+    
     const minuteHand = document.getElementById("minuteHand");
 
     function updateClock() {
@@ -583,13 +683,14 @@
 
     function generateClockNumbers() {
       const container = document.getElementById('clockNumbers');
+      let rotationBias = -5
       for (let i = 1; i <= 12; i++) {
         const div = document.createElement('div');
         div.className = 'number';
-        div.style.transform = `rotate(${i * 30}deg)`;
+        div.style.transform = `rotate(${i * 30 + rotationBias}deg)`;
         const span = document.createElement('span');
         span.textContent = i;
-        span.style.transform = `rotate(-${i * 30}deg)`;
+        span.style.transform = `rotate(-${i * 30 + rotationBias}deg)`;
         div.appendChild(span);
         container.appendChild(div);
       }
@@ -606,16 +707,41 @@
     });
 
     document.addEventListener('gesturestart', e => e.preventDefault());
-    document.addEventListener('touchmove', e => {
-      if (e.scale !== 1) e.preventDefault();
-    }, { passive: false });
+    // document.addEventListener('touchmove', e => {
+    //   if (e.scale !== 1) e.preventDefault();
+    // }, { passive: true });
 
-    const menu = document.getElementById('bookmarkMenu');
+    const menu = document.getElementById('dropdown');
     const input = document.getElementById('bookmarkInput');
     const list = document.getElementById('bookmarkList');
+    const dropdownOverlay = document.getElementById('dropdown-overlay');
 
-    function toggleDropdown() {
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    function toggleDropdownViaButton() {
+
+
+     
+        menu.classList.add("open");
+        dropdownOverlay.classList.add('overlay-active');
+      
+      
+  
+      
+      
+      
+    
+    }
+    function toggleDropdownViaOverlay() {
+
+
+        menu.classList.remove("open");
+        dropdownOverlay.classList.remove('overlay-active');
+      
+      
+  
+      
+      
+      
+    
     }
 
     function handleKey(e) {
@@ -697,38 +823,7 @@
 
 
 
-    // Continuous downward scrolling
-    const linksContainer = document.querySelector('.links');
-    let scrollSpeed = 0.8; // Adjust for faster/slower scrolling
-
-    function autoScrollUp() {
-      linksContainer.scrollTop += scrollSpeed; // Scroll downward
-
-      // Smoothly loop back when reaching bottom
-      if (linksContainer.scrollTop >= linksContainer.scrollHeight / 2) {
-        linksContainer.scrollTop = 0;
-      }
-
-      requestAnimationFrame(autoScrollUp);
-    }
-
-    // Duplicate the links content for seamless loop
-    // function duplicateLinks() {
-    //   const links = linksContainer.innerHTML;
-    //   linksContainer.innerHTML = links + links; // Double the content
-    // }
-
-    // Start everything only on screens smaller than 560px
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.innerWidth < 600) {
-        duplicateLinks();
-        setTimeout(() => {
-          linksContainer.scrollTop = 0; // Start at top
-          autoScrollUp();
-        }, 500);
-      }
-    });
-  </script>
+  </script> 
 
 </body>
 
